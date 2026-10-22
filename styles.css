@@ -1,0 +1,124 @@
+/* Vereinskasse – Darstellung. Mobile-first, ab 320 px, kein horizontales Scrollen. */
+:root {
+  --tanne: #17332c;
+  --schnee: #f6f8f7;
+  --tinte: #14201d;
+  --linie: #c9d3cf;
+  --akzent: #9b1c3a;          /* wird je Verkaufsbereich per JS gesetzt */
+  --plus: #1e6b45;            /* Pfand-Ausgabe */
+  --minus: #0f4c81;           /* Pfand-Rückgabe */
+  --warn: #a4380b;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; overscroll-behavior: none; touch-action: manipulation; }
+body {
+  font-family: var(--font); font-size: 18px; line-height: 1.35;
+  color: var(--tinte); background: var(--schnee);
+  min-height: 100vh; display: flex; flex-direction: column;
+  -webkit-tap-highlight-color: transparent;
+}
+button { font: inherit; color: inherit; cursor: pointer; border: 0; touch-action: manipulation; }
+button:disabled { opacity: .45; cursor: not-allowed; }
+button:focus-visible, dialog:focus-visible { outline: 4px solid #ffbf2f; outline-offset: 2px; }
+
+#kopf { background: var(--akzent); color: #fff; padding: 12px 16px; position: sticky; top: 0; z-index: 5; }
+#kopf h1 { margin: 0; font-size: 1.25rem; }
+#app { flex: 1; width: 100%; max-width: 900px; margin: 0 auto; padding: 12px 12px 0; }
+#fuss { font-size: .8rem; color: #3d4b47; padding: 16px; text-align: center; }
+#fuss p { margin: 2px 0; }
+#testlog { text-align: left; white-space: pre-wrap; background: #fff; border: 1px solid var(--linie); padding: 8px; }
+
+h2 { font-size: 1.1rem; margin: 20px 0 8px; display: flex; justify-content: space-between; align-items: center; }
+.hilfe { font-size: .85rem; color: #3d4b47; margin: 8px 0; }
+
+/* Startseite */
+.start { display: grid; gap: 12px; margin-top: 8px; }
+.bereich { min-height: 120px; border-radius: 14px; color: #fff; font-size: 1.5rem; font-weight: 700; padding: 16px; text-align: left; }
+
+/* Produkte */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.prod {
+  position: relative; min-height: 96px; padding: 12px; border-radius: 12px;
+  background: #fff; border: 2px solid var(--akzent); text-align: left;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.prod:active { background: #ecf0ee; }
+.pn { font-weight: 700; overflow-wrap: anywhere; }
+.pp { font-size: 1.15rem; }
+.badge {
+  position: absolute; top: -8px; right: -8px; min-width: 32px; height: 32px; padding: 0 8px;
+  border-radius: 16px; background: var(--akzent); color: #fff; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+/* Listenansicht (Spätzlehütte, Grillstand): Produkte untereinander */
+.grid.liste { grid-template-columns: 1fr; }
+.grid.liste .prod { flex-direction: row; align-items: center; gap: 12px; min-height: 76px; }
+.grid.liste .pn { flex: 1; }
+.grid.liste .badge { position: static; flex: none; }
+.pfand { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.pf { min-height: 64px; border-radius: 12px; color: #fff; font-weight: 700; }
+.pf.aus { background: var(--plus); }
+.pf.rueck { background: var(--minus); }
+
+/* Warenkorb */
+.cart { list-style: none; margin: 0; padding: 0; }
+.zeile { background: #fff; border: 1px solid var(--linie); border-radius: 12px; padding: 10px; margin-bottom: 8px; }
+.zeile.pf-aus { border-left: 8px solid var(--plus); }
+.zeile.pf-rueck { border-left: 8px solid var(--minus); }
+.zkopf { display: flex; justify-content: space-between; gap: 8px; font-weight: 700; }
+.zdetail { font-size: .9rem; color: #3d4b47; }
+.zknoepfe { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+.zknoepfe .m { min-width: 36px; text-align: center; font-weight: 700; font-size: 1.2rem; }
+.qb { width: 52px; height: 52px; border-radius: 10px; background: var(--tanne); color: #fff; font-size: 1.6rem; font-weight: 700; }
+.del { margin-left: auto; min-height: 52px; padding: 0 14px; border-radius: 10px; background: #fff; border: 2px solid var(--warn); color: var(--warn); font-weight: 700; }
+.leer { color: #3d4b47; }
+.linkbtn { background: none; color: var(--warn); text-decoration: underline; font-size: .9rem; min-height: 44px; padding: 0 8px; }
+
+/* Untere Leiste mit Gesamtbetrag */
+.bar {
+  position: sticky; bottom: 0; margin: 12px -12px 0; padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
+  background: var(--tanne); color: #fff; display: flex; align-items: center; gap: 12px;
+}
+.sum { flex: 1; display: flex; flex-direction: column; }
+.sum span { font-size: .85rem; }
+.sum strong { font-size: 1.7rem; }
+.go { min-height: 60px; padding: 0 20px; border-radius: 12px; background: #fff; color: var(--tanne); font-weight: 800; font-size: 1.1rem; }
+
+/* Bezahlen */
+.anzeige { background: #fff; border: 2px solid var(--tanne); border-radius: 14px; padding: 12px; margin-bottom: 10px; }
+.zeilea { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.zeilea .w { font-size: 2rem; font-weight: 800; }
+.zeilea.klein .w { font-size: 1.5rem; }
+.ok { color: var(--plus); }
+.fehl { color: var(--warn); font-weight: 700; }
+.melde { min-height: 1.4em; color: var(--warn); font-weight: 600; margin: 4px 0; }
+.tasten { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.tasten button { min-height: 64px; border-radius: 12px; background: #fff; border: 2px solid var(--tanne); font-size: 1.6rem; font-weight: 700; }
+.tasten button.c { background: var(--warn); border-color: var(--warn); color: #fff; }
+.schnell { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 8px; }
+.schnell button { min-height: 52px; border-radius: 10px; background: #dde7e3; font-weight: 700; font-size: .95rem; padding: 0 2px; }
+.aktionen { display: grid; grid-template-columns: 1fr 2fr; gap: 10px; margin: 14px 0; }
+.prim, .sek { min-height: 64px; border-radius: 12px; font-weight: 800; font-size: 1.1rem; padding: 0 14px; }
+.prim { background: var(--akzent); color: #fff; }
+.sek { background: #fff; border: 2px solid var(--tanne); }
+
+/* Abschluss */
+.gross { text-align: center; padding: 24px 12px; }
+.gross .label { font-size: 1.2rem; }
+.gross .betrag { font-size: 3.2rem; font-weight: 800; color: var(--plus); }
+.gross .betrag.aus { color: var(--minus); }
+.gross .betrag.null { color: var(--tinte); font-size: 2rem; }
+
+dialog { border: 3px solid var(--tanne); border-radius: 14px; max-width: 420px; width: calc(100% - 32px); padding: 18px; font-size: 1.1rem; }
+dialog::backdrop { background: rgba(0, 0, 0, .55); }
+.dlg-knoepfe { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+
+@media (min-width: 700px) {
+  body { font-size: 20px; }
+  .start { grid-template-columns: repeat(3, 1fr); }
+  .bereich { min-height: 200px; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+  .tasten button { min-height: 76px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }

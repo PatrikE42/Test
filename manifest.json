@@ -1,13 +1,13 @@
 {
-  "name": "Vereinskasse",
-  "short_name": "Kasse",
+  "name": "Kasse Adventsmarkt",
+  "short_name": "Kasse Adventsmarkt",
   "description": "Einfache Vereins-Kassenhilfe ohne Speicherung von Verkäufen",
   "lang": "de",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#17332c",
+  "background_color": "#131a2d",
   "theme_color": "#17332c",
   "icons": [
     { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },

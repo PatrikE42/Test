@@ -4,35 +4,38 @@
 
 /* ================= 1. KONFIGURATION (hier Preise und Texte pflegen) ================= */
 const KONFIG = {
-  version: '1.0',
-  preisstand: '01.12.2026',      // Bei jeder Preisänderung anpassen, damit alte Caches auffallen
+  titel: 'Kasse Fürstenzeller Adventsmarkt',
+  version: '1.1',
+  preisstand: '23.10.2026',      // Bei jeder Preisänderung anpassen, damit alte Caches auffallen
   pfandCent: 200,                // Pfand pro Stück in Cent
   maxCent: 99999,                // Maximal eingebbarer Betrag: 999,99 €
   schnellwahlCent: [500, 1000, 2000, 5000],
   bereiche: [
-    // layout: 'liste' = Produkte untereinander; ohne Angabe = Kacheln nebeneinander
+    // info = kleiner Zusatztext unter dem Produkt (Marke/Alkohol/Allergene), menge = Füllmenge
     { id: 'gluehhuette', name: 'Glühhütte/Schneebar', farbe: '#9b1c3a', pfandAktiv: true, produkte: [
-      { id: 'gw-rot',   name: 'Glühwein Rot',        cent: 350 },
-      { id: 'gw-weiss', name: 'Glühwein Weiß',       cent: 350 },
-      { id: 'gw-chard', name: 'Glühwein Chardonnay', cent: 450 },
-      { id: 'gw-dorn',  name: 'Glühwein Dornfelder', cent: 550 },
-      { id: 'kinder',   name: 'Kinderpunsch',        cent: 300 },
-      { id: 'schnaps',  name: 'Schnaps',             cent: 250 },
-      { id: 'bier',     name: 'Bier',                cent: 400 },
-      { id: 'colamix',  name: 'Cola Mix',            cent: 350 },
-      { id: 'schorle',  name: 'Apfelschorle',        cent: 350 },
-      { id: 'wasser',   name: 'Wasser',              cent: 300 } ] },
-    { id: 'spaetzle', name: 'Spätzlehütte', farbe: '#8f5410', pfandAktiv: false, layout: 'liste', produkte: [
-      { id: 'kaesespaetzle', name: 'Käsespätzle', cent: 550 },
-      { id: 'churros',       name: 'Churros mit Zimt und Zucker', cent: 500 },
-      { id: 'churros-soße',  name: 'Churros mit Schoko oder Biscoffsoße', cent: 600 } ] },
-    { id: 'grill', name: 'Grillstand', farbe: '#7a2e12', pfandAktiv: false, layout: 'liste', produkte: [
-      { id: 'christkindl', name: 'Christkindl Bratwurstsemmel',        cent: 600 },
-      { id: 'krampus',     name: 'Krampus Bratwurstsemmel scharf',     cent: 600 } ] }
+      { id: 'gw-rot',   name: 'Glühwein Rot',        menge: '0,2 l',  cent: 350, info: 'Augsb. Christkindlmarkt Glühwein Rot 9 %vol' },
+      { id: 'gw-weiss', name: 'Glühwein Weiß',       menge: '0,2 l',  cent: 350, info: 'Augsb. Christkindlmarkt Glühwein Weiß 9 %vol' },
+      { id: 'gw-chard', name: 'Glühwein Chardonnay', menge: '0,2 l',  cent: 450, info: 'Rebsor. Glühwein Chardonnay 12 %vol' },
+      { id: 'kinder',   name: 'Kinderpunsch',        menge: '0,2 l',  cent: 350, info: 'Glühsternchen Rot, alkoholfrei' },
+      { id: 'schnaps',  name: 'Schnaps',             menge: '0,04 l', cent: 300, info: 'Heißes Pfläumchen (Allergene: Laktose) / Apfelstrudel (Allergene: Gluten (Weizen), Laktose, Haselnuss)' },
+      { id: 'bier',     name: 'Bier',                menge: '0,33 l', cent: 400, info: 'Hutthurmer Winterzauber 5,5 %vol' },
+      { id: 'colamix',  name: 'Cola Mix',            menge: '0,5 l',  cent: 350, info: 'Hutthurmer Cola-Mix' },
+      { id: 'schorle',  name: 'Apfelschorle',        menge: '0,5 l',  cent: 350, info: 'Hutthurmer Apfelschorle' },
+      { id: 'wasser',   name: 'Wasser',              menge: '0,5 l',  cent: 300, info: 'Hutthurmer Quellwasser still' } ] },
+    { id: 'schmankerl', name: 'Schmankerlhütte', farbe: '#8f5410', pfandAktiv: false, produkte: [
+      { id: 'kaesespaetzle',    name: 'Käsespätzle',                   cent: 500, info: 'Allergene: Laktose, Eier, Gluten, Sellerie' },
+      { id: 'churros-zimt',     name: 'Churros Zimt/Zucker',           cent: 450, info: 'Allergene: Gluten (Weizen)' },
+      { id: 'churros-schoko',   name: 'Churros Schoko Topping',        cent: 500, info: 'Allergene: Gluten (Weizen), Laktose, Haselnüsse' },
+      { id: 'churros-pistazie', name: 'Churros Pistazie/Biscoff Topping', cent: 600, info: 'Allergene: Gluten (Weizen), Laktose, Soja, kann Spuren von Hülsenfrüchten enthalten' } ] },
+    { id: 'grill', name: 'Grillstand', farbe: '#7a2e12', pfandAktiv: false, produkte: [
+      { id: 'christkindl', name: 'Christkindl Bratwurstsemmel', cent: 550, info: 'Allergene: Gluten (Weizen), Sesamsamen, Soja, Senf, Sellerie' },
+      { id: 'krampus',     name: 'Krampus Bratwurstsemmel',     cent: 550, info: 'Allergene: Gluten (Weizen), Sesamsamen, Soja, Senf, Sellerie' } ] }
   ]
 };
 
 /* ================= 2. KASSENLOGIK (reine Funktionen, alle Beträge in ganzen Cent) ================= */
+// Anzeigename inkl. Füllmenge, z. B. "Glühwein Rot 0,2 l"
+const produktName = p => p.name + (p.menge ? '\u00a0' + p.menge : '');
 const neuerKorb = () => ({ produkte: {}, pfandAus: 0, pfandRueck: 0 });
 
 // Warenkorbzeilen. Pfand: zwei getrennte Zeilen, Ausgabe +2,00 €, Rückgabe −2,00 € je Stück, keine Verrechnung.
@@ -40,7 +43,7 @@ function erstelleZeilen(bereich, korb) {
   const z = [];
   for (const p of bereich.produkte) {
     const m = korb.produkte[p.id] || 0;
-    if (m > 0) z.push({ key: p.id, name: p.name, einzel: p.cent, menge: m, summe: p.cent * m });
+    if (m > 0) z.push({ key: p.id, name: produktName(p), einzel: p.cent, menge: m, summe: p.cent * m });
   }
   if (korb.pfandAus > 0)   z.push({ key: 'pfandAus',   name: 'Pfand-Ausgabe',   art: 'pf-aus',   einzel:  KONFIG.pfandCent, menge: korb.pfandAus,   summe:  KONFIG.pfandCent * korb.pfandAus });
   if (korb.pfandRueck > 0) z.push({ key: 'pfandRueck', name: 'Pfand-Rückgabe',  art: 'pf-rueck', einzel: -KONFIG.pfandCent, menge: korb.pfandRueck, summe: -KONFIG.pfandCent * korb.pfandRueck });
@@ -89,7 +92,7 @@ function viewOrder() {
   const b = S.bereich, z = zeilen(), g = gesamtCent(z);
   const prod = b.produkte.map(p => {
     const m = S.korb.produkte[p.id] || 0;
-    return `<button class="prod" data-act="add" data-id="${p.id}"><span class="pn">${p.name}</span><span class="pp">${fmt(p.cent)}</span>${m ? `<span class="badge" aria-label="${m} im Warenkorb">${m}</span>` : ''}</button>`;
+    return `<button class="prod" data-act="add" data-id="${p.id}"><span class="pt"><span class="pn">${produktName(p)}</span>${p.info ? `<span class="pi">${p.info}</span>` : ''}</span><span class="pp">${fmt(p.cent)}</span>${m ? `<span class="badge" aria-label="${m} im Warenkorb">${m}</span>` : ''}</button>`;
   }).join('');
   const pfand = b.pfandAktiv ? `<div class="pfand">
       <button class="pf aus" data-act="pfaus">+ Pfand ${fmt(KONFIG.pfandCent)}</button>
@@ -103,7 +106,7 @@ function viewOrder() {
         <button class="qb" data-act="plus" data-id="${x.key}" aria-label="Menge von ${x.name} erhöhen">+</button>
         <button class="del" data-act="del" data-id="${x.key}" aria-label="${x.name} entfernen">Entfernen</button>
       </div></li>`).join('')}</ul>` : '<p class="leer">Noch nichts ausgewählt. Tippe auf ein Produkt.</p>';
-  return `<div class="grid ${b.layout === 'liste' ? 'liste' : ''}">${prod}</div>${pfand}
+  return `<div class="grid liste">${prod}</div>${pfand}
     <h2>Warenkorb ${z.length ? '<button class="linkbtn" data-act="verwerfen">Bestellung verwerfen</button>' : ''}</h2>${liste}
     <button class="linkbtn" data-act="wechseln">Bereich wechseln</button>
     <div class="bar"><div class="sum" aria-live="polite"><span>Gesamt</span><strong>${fmt(g)}</strong></div>
@@ -157,7 +160,7 @@ function viewDone() {
 function render() {
   const a = document.activeElement, d = a && a.dataset && a.dataset.act ? a.dataset : null;
   document.documentElement.style.setProperty('--akzent', S.bereich ? S.bereich.farbe : '#17332c');
-  $('titel').textContent = S.bereich ? S.bereich.name : 'Vereinskasse';
+  $('titel').textContent = S.bereich ? S.bereich.name : KONFIG.titel;
   $('app').innerHTML = { home: viewHome, order: viewOrder, pay: viewPay, confirm: viewConfirm, done: viewDone }[S.screen]();
   if (d) { // Fokus nach dem Neuzeichnen wiederherstellen (Tastaturbedienung)
     const el = $('app').querySelector(`[data-act="${d.act}"]${d.id ? `[data-id="${d.id}"]` : ''}${d.val ? `[data-val="${d.val}"]` : ''}`);
@@ -233,9 +236,10 @@ window.addEventListener('beforeunload', e => { if (zeilen().length) { e.preventD
 /* ================= 4. SELBSTTESTS (Konsole: runSelfTests() oder URL ?test=1) ================= */
 function runSelfTests() {
   const erg = [], t = (name, ok) => erg.push({ name, ok: !!ok });
-  const erwartet = { 'gw-rot': 350, 'gw-weiss': 350, 'gw-chard': 450, 'gw-dorn': 550, kinder: 300, schnaps: 250, bier: 400, colamix: 350, schorle: 350, wasser: 300, kaesespaetzle: 550, churros: 500, 'churros-soße': 600, christkindl: 600, krampus: 600 };
+  const erwartet = { 'gw-rot': 350, 'gw-weiss': 350, 'gw-chard': 450, kinder: 350, schnaps: 300, bier: 400, colamix: 350, schorle: 350, wasser: 300, kaesespaetzle: 500, 'churros-zimt': 450, 'churros-schoko': 500, 'churros-pistazie': 600, christkindl: 550, krampus: 550 };
   const alle = KONFIG.bereiche.flatMap(b => b.produkte);
   t('Alle 15 Produkte vorhanden', alle.length === 15);
+  t('Jedes Produkt hat einen Infotext', alle.every(p => p.info));
   for (const p of alle) t(`Preis ${p.name} = ${fmt(erwartet[p.id])}`, p.cent === erwartet[p.id]);
   for (const b of KONFIG.bereiche) { // Dreifach-Menge je Produkt eines Bereichs
     const k = neuerKorb(); b.produkte.forEach(p => aendere(k, p.id, 3));

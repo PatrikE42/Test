@@ -61,6 +61,7 @@ h2 { font-size: 1.1rem; margin: 20px 0 8px; display: flex; justify-content: spac
 .pf { min-height: 64px; border-radius: 12px; color: #fff; font-weight: 700; }
 .pf.aus { background: var(--plus); }
 .pf.rueck { background: var(--minus); }
+.pf.alle { grid-column: 1 / -1; background: var(--tanne); }
 
 /* Warenkorb */
 .cart { list-style: none; margin: 0; padding: 0; }

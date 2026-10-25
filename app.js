@@ -5,20 +5,21 @@
 /* ================= 1. KONFIGURATION (hier Preise und Texte pflegen) ================= */
 const KONFIG = {
   titel: 'Kasse Fürstenzeller Adventsmarkt',
-  version: '1.2',
+  version: '1.3',
   preisstand: '23.10.2026',      // Bei jeder Preisänderung anpassen, damit alte Caches auffallen
   pfandCent: 200,                // Pfand pro Stück in Cent
   maxCent: 99999,                // Maximal eingebbarer Betrag: 999,99 €
   schnellwahlCent: [500, 1000, 2000, 5000],
   bereiche: [
+    // ohnePfand: true = zählt bei der Taste "Mit Pfand" nicht mit (Schnaps)
     // info = kleiner Zusatztext unter dem Produkt (Marke/Alkohol/Allergene), menge = Füllmenge
     { id: 'gluehhuette', name: 'Glühhütte/Schneebar', farbe: '#9b1c3a', pfandAktiv: true, produkte: [
       { id: 'gw-rot',   name: 'Glühwein Rot',        menge: '0,2 l',  cent: 350, info: 'Augsb. Christkindlmarkt Glühwein Rot 9 %vol' },
       { id: 'gw-weiss', name: 'Glühwein Weiß',       menge: '0,2 l',  cent: 350, info: 'Augsb. Christkindlmarkt Glühwein Weiß 9 %vol' },
       { id: 'gw-chard', name: 'Glühwein Chardonnay', menge: '0,2 l',  cent: 450, info: 'Rebsor. Glühwein Chardonnay 12 %vol' },
       { id: 'kinder',   name: 'Kinderpunsch',        menge: '0,2 l',  cent: 350, info: 'Glühsternchen Rot, alkoholfrei' },
-      { id: 'schnaps',  name: 'Schnaps',             menge: '0,04 l', cent: 300, info: 'Heißes Pfläumchen (Allergene: Laktose) / Apfelstrudel (Allergene: Gluten (Weizen), Laktose, Haselnuss)' },
-      { id: 'schnaps-special', name: 'Schnaps Special', menge: '4 × 0,04 l', cent: 1000, info: '4 Shots für 10,00 € statt 12,00 € · Heißes Pfläumchen (Allergene: Laktose) / Apfelstrudel (Allergene: Gluten (Weizen), Laktose, Haselnuss)' },
+      { id: 'schnaps',  name: 'Schnaps',             menge: '0,04 l', cent: 300, ohnePfand: true, info: 'Heißes Pfläumchen (Allergene: Laktose) / Apfelstrudel (Allergene: Gluten (Weizen), Laktose, Haselnuss)' },
+      { id: 'schnaps-special', name: 'Schnaps Special', menge: '4 × 0,04 l', cent: 1000, ohnePfand: true, info: '4 Shots für 10,00 € statt 12,00 € · Heißes Pfläumchen (Allergene: Laktose) / Apfelstrudel (Allergene: Gluten (Weizen), Laktose, Haselnuss)' },
       { id: 'bier',     name: 'Bier',                menge: '0,33 l', cent: 400, info: 'Hutthurmer Winterzauber 5,5 %vol' },
       { id: 'colamix',  name: 'Cola Mix',            menge: '0,5 l',  cent: 350, info: 'Hutthurmer Cola-Mix' },
       { id: 'schorle',  name: 'Apfelschorle',        menge: '0,5 l',  cent: 350, info: 'Hutthurmer Apfelschorle' },
@@ -51,6 +52,11 @@ function erstelleZeilen(bereich, korb) {
   return z;
 }
 // Gesamtbetrag darf negativ werden (mehr Rückgaben als Ausgaben) → Auszahlung.
+// Taste "Mit Pfand": Anzahl aller gewählten Produkte mit Pfand (alle außer Schnaps/Schnaps Special).
+// Beispiel: 3 Glühwein + 1 Kinderpunsch + 2 Bier + 1 Wasser = 7 Pfand-Ausgaben.
+function pfandAnzahl(bereich, korb) {
+  return bereich.produkte.reduce((n, p) => n + (p.ohnePfand ? 0 : (korb.produkte[p.id] || 0)), 0);
+}
 const gesamtCent = zeilen => zeilen.reduce((s, z) => s + z.summe, 0);
 
 // Menge ändern; bei 0 verschwindet die Position. delta = -Infinity entfernt sie ausdrücklich.
@@ -97,7 +103,8 @@ function viewOrder() {
   }).join('');
   const pfand = b.pfandAktiv ? `<div class="pfand">
       <button class="pf aus" data-act="pfaus">+ Pfand ${fmt(KONFIG.pfandCent)}</button>
-      <button class="pf rueck" data-act="pfrueck">\u2212 Pfand ${fmt(KONFIG.pfandCent)}</button></div>` : '';
+      <button class="pf rueck" data-act="pfrueck">\u2212 Pfand ${fmt(KONFIG.pfandCent)}</button>
+      <button class="pf alle" data-act="pfalle" ${pfandAnzahl(b, S.korb) ? '' : 'disabled'}>Mit Pfand${pfandAnzahl(b, S.korb) ? ` (${pfandAnzahl(b, S.korb)}×)` : ''}</button></div>` : '';
   const liste = z.length ? `<ul class="cart">${z.map(x => `<li class="zeile ${x.art || ''}">
       <div class="zkopf"><span>${x.name}</span><span>${fmt(x.summe)}</span></div>
       <div class="zdetail">${fmt(x.einzel)} je Stück</div>
@@ -178,6 +185,7 @@ function aktion(act, id, val) {
     case 'bereich': S.bereich = KONFIG.bereiche.find(b => b.id === id); S.korb = neuerKorb(); S.screen = 'order'; break;
     case 'add': aendere(S.korb, id, 1); break;
     case 'pfaus': aendere(S.korb, 'pfandAus', 1); break;
+    case 'pfalle': S.korb.pfandAus = pfandAnzahl(S.bereich, S.korb); break; // setzt die Pfand-Ausgaben auf die Anzahl der Getränke (kein doppeltes Addieren)
     case 'pfrueck': aendere(S.korb, 'pfandRueck', 1); break;
     case 'plus': aendere(S.korb, id, 1); break;
     case 'minus': aendere(S.korb, id, -1); break;
@@ -251,6 +259,9 @@ function runSelfTests() {
   t('Eine Pfand-Rückgabe = −2,00 €', pk(0, 1) === -200);
   t('2 Ausgaben, 3 Rückgaben = −2,00 €', pk(2, 3) === -200);
   t('Gesamt 0 bei 1 Ausgabe + 1 Rückgabe', pk(1, 1) === 0);
+  const pk2 = neuerKorb(); [['gw-rot', 3], ['kinder', 1], ['bier', 2], ['wasser', 1], ['schnaps', 2], ['schnaps-special', 1]].forEach(([i, m]) => aendere(pk2, i, m));
+  t('Mit Pfand: 3+1+2+1 = 7, Schnaps und Special ausgenommen', pfandAnzahl(gl, pk2) === 7);
+  t('Mit Pfand ohne Getränke = 0', pfandAnzahl(gl, neuerKorb()) === 0);
   const k = neuerKorb(); aendere(k, 'gw-rot', 2); aendere(k, 'gw-rot', -1); aendere(k, 'gw-rot', -1);
   t('Menge 0 entfernt Position', erstelleZeilen(gl, k).length === 0);
   aendere(k, 'kinder', 4); aendere(k, 'kinder', -Infinity);

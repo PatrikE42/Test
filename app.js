@@ -5,7 +5,7 @@
 /* ================= 1. KONFIGURATION (hier Preise und Texte pflegen) ================= */
 const KONFIG = {
   titel: 'Kasse Fürstenzeller Adventsmarkt',
-  version: '1.1',
+  version: '1.2',
   preisstand: '23.10.2026',      // Bei jeder Preisänderung anpassen, damit alte Caches auffallen
   pfandCent: 200,                // Pfand pro Stück in Cent
   maxCent: 99999,                // Maximal eingebbarer Betrag: 999,99 €
@@ -18,6 +18,7 @@ const KONFIG = {
       { id: 'gw-chard', name: 'Glühwein Chardonnay', menge: '0,2 l',  cent: 450, info: 'Rebsor. Glühwein Chardonnay 12 %vol' },
       { id: 'kinder',   name: 'Kinderpunsch',        menge: '0,2 l',  cent: 350, info: 'Glühsternchen Rot, alkoholfrei' },
       { id: 'schnaps',  name: 'Schnaps',             menge: '0,04 l', cent: 300, info: 'Heißes Pfläumchen (Allergene: Laktose) / Apfelstrudel (Allergene: Gluten (Weizen), Laktose, Haselnuss)' },
+      { id: 'schnaps-special', name: 'Schnaps Special', menge: '4 × 0,04 l', cent: 1000, info: '4 Shots für 10,00 € statt 12,00 € · Heißes Pfläumchen (Allergene: Laktose) / Apfelstrudel (Allergene: Gluten (Weizen), Laktose, Haselnuss)' },
       { id: 'bier',     name: 'Bier',                menge: '0,33 l', cent: 400, info: 'Hutthurmer Winterzauber 5,5 %vol' },
       { id: 'colamix',  name: 'Cola Mix',            menge: '0,5 l',  cent: 350, info: 'Hutthurmer Cola-Mix' },
       { id: 'schorle',  name: 'Apfelschorle',        menge: '0,5 l',  cent: 350, info: 'Hutthurmer Apfelschorle' },
@@ -236,9 +237,9 @@ window.addEventListener('beforeunload', e => { if (zeilen().length) { e.preventD
 /* ================= 4. SELBSTTESTS (Konsole: runSelfTests() oder URL ?test=1) ================= */
 function runSelfTests() {
   const erg = [], t = (name, ok) => erg.push({ name, ok: !!ok });
-  const erwartet = { 'gw-rot': 350, 'gw-weiss': 350, 'gw-chard': 450, kinder: 350, schnaps: 300, bier: 400, colamix: 350, schorle: 350, wasser: 300, kaesespaetzle: 500, 'churros-zimt': 450, 'churros-schoko': 500, 'churros-pistazie': 600, christkindl: 550, krampus: 550 };
+  const erwartet = { 'gw-rot': 350, 'gw-weiss': 350, 'gw-chard': 450, kinder: 350, schnaps: 300, 'schnaps-special': 1000, bier: 400, colamix: 350, schorle: 350, wasser: 300, kaesespaetzle: 500, 'churros-zimt': 450, 'churros-schoko': 500, 'churros-pistazie': 600, christkindl: 550, krampus: 550 };
   const alle = KONFIG.bereiche.flatMap(b => b.produkte);
-  t('Alle 15 Produkte vorhanden', alle.length === 15);
+  t('Alle 16 Produkte vorhanden', alle.length === 16);
   t('Jedes Produkt hat einen Infotext', alle.every(p => p.info));
   for (const p of alle) t(`Preis ${p.name} = ${fmt(erwartet[p.id])}`, p.cent === erwartet[p.id]);
   for (const b of KONFIG.bereiche) { // Dreifach-Menge je Produkt eines Bereichs
